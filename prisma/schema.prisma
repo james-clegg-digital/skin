@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  NEEDS_MORE_INFO
+  COMPLETED
+}
+
+enum TriageOutcome {
+  ROUTINE
+  URGENT
+  NEEDS_MORE_INFO
+  NO_FURTHER_ACTION
+}
+
+model Patient {
+  id            Int           @id @default(autoincrement())
+  name          String
+  dateOfBirth   DateTime
+  nhsNumber     String?
+  submissions   Submission[]
+  messages      Message[]     @relation("PatientMessages")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Clinician {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  passwordHash String
+  name         String
+  sessions     Session[]
+  messages     Message[]  @relation("ClinicianMessages")
+  createdAt    DateTime   @default(now())
+}
+
+model Submission {
+  id              Int                @id @default(autoincrement())
+  reference       String             @unique
+  patient         Patient            @relation(fields: [patientId], references: [id])
+  patientId       Int
+  moleLocation    String?
+  noticedAt       DateTime?
+  changes         String?
+  symptoms        String?
+  notes           String?
+  status          SubmissionStatus   @default(DRAFT)
+  outcome         TriageOutcome?
+  photos          SubmissionPhoto[]
+  messages        Message[]
+  statusHistory   StatusHistory[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model SubmissionPhoto {
+  id            Int       @id @default(autoincrement())
+  submission    Submission @relation(fields: [submissionId], references: [id])
+  submissionId  Int
+  filename      String
+  originalName  String
+  contentType   String
+  createdAt     DateTime  @default(now())
+}
+
+model Message {
+  id            Int        @id @default(autoincrement())
+  submission    Submission  @relation(fields: [submissionId], references: [id])
+  submissionId  Int
+  patient       Patient?    @relation("PatientMessages", fields: [patientId], references: [id])
+  patientId     Int?
+  clinician     Clinician?  @relation("ClinicianMessages", fields: [clinicianId], references: [id])
+  clinicianId   Int?
+  body          String
+  createdAt     DateTime    @default(now())
+}
+
+model StatusHistory {
+  id            Int                @id @default(autoincrement())
+  submission    Submission         @relation(fields: [submissionId], references: [id])
+  submissionId  Int
+  status        SubmissionStatus
+  note          String?
+  createdAt     DateTime           @default(now())
+}
+
+model Session {
+  id            Int        @id @default(autoincrement())
+  token         String     @unique
+  clinician     Clinician  @relation(fields: [clinicianId], references: [id])
+  clinicianId   Int
+  expiresAt     DateTime
+  createdAt     DateTime   @default(now())
+}
