@@ -1,0 +1,7 @@
+node_modules
+.next
+*.log
+dev.db
+.env
+public/uploads
+public/assets
