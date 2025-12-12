@@ -1,8 +1,4 @@
-/*
-  nhsuk-frontend v10+ ships compiled CSS from dist/nhsuk instead of the legacy
-  packages/nhsuk-frontend/assets path used by v7 docs.
-*/
-@import 'nhsuk-frontend/dist/nhsuk/nhsuk-frontend.min.css';
+@import 'nhsuk-frontend/packages/nhsuk-frontend/assets/nhsuk.css';
 
 :root {
   --nhsuk-font: Frutiger, 'Frutiger W01', Arial, sans-serif;

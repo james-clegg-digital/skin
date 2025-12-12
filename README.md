@@ -13,20 +13,16 @@ This Next.js (App Router) MVP lets patients upload skin mole photographs for cli
    ```bash
    npm install
    ```
-2. Copy NHS frontend assets (v10+ now ships assets from `dist/nhsuk/assets`)
-   ```bash
-   npm run copy:nhs-assets
-   ```
-3. Set environment variables
+2. Set environment variables
    ```bash
    export DATABASE_URL="file:./dev.db"
    ```
-4. Run database migrations and seed demo data
+3. Run database migrations and seed demo data
    ```bash
    npx prisma migrate dev --name init
    npx prisma db seed
    ```
-5. Start the dev server
+4. Start the dev server
    ```bash
    npm run dev
    ```
@@ -34,9 +30,7 @@ This Next.js (App Router) MVP lets patients upload skin mole photographs for cli
 Clinician demo credentials: `clinician@example.com` / `password123`.
 
 ## NHS design system usage
-The app imports `nhsuk-frontend` v10 global styles from `dist/nhsuk/nhsuk-frontend.min.css` (the legacy `packages/nhsuk-frontend/assets/nhsuk.css` path from v7 no longer exists). Assets are copied into `public/assets` using the `npm run copy:nhs-assets` helper.
-
-NHS patterns in use include:
+The app imports `nhsuk-frontend` global styles and uses NHS patterns such as:
 - Header, footer, skip link and layout container
 - Buttons, form groups, inset text, warning callouts and panel components
 - Summary list pattern on review page
